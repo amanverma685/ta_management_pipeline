@@ -7,6 +7,7 @@ terraform {
     secret_key = "ZmN2/lqymp4jIVRAUjRQNqYZGZYRTf5LkmL4uZwx"
     region     = "ap-south-1"
   }
+  
   required_providers {
     aws = {
       source  = "hashicorp/aws"
