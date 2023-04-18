@@ -1,0 +1,12 @@
+variable env {}
+variable host {}
+variable database {}
+variable user {}
+variable password {}
+variable port {}
+variable psycopg2_arn {}
+variable client_id {}
+variable group_name_requester {}
+variable group_name_respondent {}
+variable user_pool_id {}
+variable user_pool_arn {}
