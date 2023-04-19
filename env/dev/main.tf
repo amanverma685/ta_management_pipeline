@@ -36,8 +36,8 @@ module "authorisation_api" {
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   client_id             = "41ktatknk96rrk9kjgpe6ighdc"
-  group_name_requester  = "requester"
-  group_name_respondent = "respondent"
+  group_name_student  = "student"
+  group_name_professor = "professor"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
 }
 
