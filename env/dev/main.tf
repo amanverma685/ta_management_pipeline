@@ -28,8 +28,8 @@ provider "aws" {
 module "authorisation_api" {
   source                = "../../authorisation_apis/"
   env                   = "dev"
-  host                  = "vt-survey-database.copaymbev82s.us-east-2.rds.amazonaws.com"
-  database              = "vt_survey_management"
+  host                  = "spe-major-project.cqfn3y5ohgqj.ap-south-1.rds.amazonaws.com"
+  database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
   password              = "admin123"
@@ -40,6 +40,7 @@ module "authorisation_api" {
   group_name_respondent = "respondent"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
 }
+
 
 
 
