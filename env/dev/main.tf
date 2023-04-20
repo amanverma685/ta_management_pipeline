@@ -41,8 +41,8 @@ module "authorisation_api" {
   user_pool_id          = "ap-south-1_cKnp6b0v0"
 }
 
-module "user_details" {
-  source                = "../../user_details/"
+module "get_survey_metrics" {
+  source                = "../../get_survey_metrics/"
   env                   = "dev"
   host                  = "spe-major-project.cqfn3y5ohgqj.ap-south-1.rds.amazonaws.com"
   database              = "spe_major"
