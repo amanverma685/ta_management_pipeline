@@ -91,7 +91,9 @@ resource "aws_lambda_function" "sign_up_registration" {
       password="${var.password}",
       port= "${var.port}",
       client_id= "${var.client_id}",
-      group_name = "${var.group_name_requester}",
+      group_name_student = "${var.group_name_student}",
+      group_name_professor = "${var.group_name_professor}",
+      
       user_pool_id ="${var.user_pool_id}",
       user_pool_arn ="${var.user_pool_arn}"
     }
