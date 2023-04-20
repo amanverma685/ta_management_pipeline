@@ -61,12 +61,12 @@ resource "aws_iam_role_policy_attachment" "test_attach_get_user_details_by_user_
 resource "aws_lambda_function" "get_user_details_by_user_id" {
 
 
-  filename      = "../../user_management_api/get_user_details_by_user_id.zip"
+  filename      = "../../user_details/get_user_details_by_user_id.zip"
   function_name = "get_user_details_by_user_id"
   role          = aws_iam_role.iam_get_user_details_by_user_id.arn
   handler       = "lambda_function.lambda_handler"
 
-  source_code_hash = filebase64sha256("../../user_management_api/get_user_details_by_user_id.zip")
+  source_code_hash = filebase64sha256("../../user_details/get_user_details_by_user_id.zip")
 
   runtime = "python3.8"
 
