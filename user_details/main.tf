@@ -1,5 +1,5 @@
-resource "aws_iam_role" "iam_get_user_details_by_user_id" {
-  name = "iam_get_user_details_by_user_id_${var.env}"
+resource "aws_iam_role" "iam_get_get_user_details_by_user_id" {
+  name = "iam_get_get_user_details_by_user_id_${var.env}"
 
   assume_role_policy = <<EOF
 {
@@ -88,63 +88,52 @@ resource "aws_lambda_permission" "aws_lambda_get_user_details_by_user_id_permiss
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.get_user_details_by_user_id.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn = "${aws_api_gateway_rest_api.user_management_api.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_rest_api.get_user_details.execution_arn}/*/*"
 }
 
-
 # API Name
-resource "aws_api_gateway_rest_api" "user_management_api" {
+resource "aws_api_gateway_rest_api" "get_user_details" {
   name = "User Details"
-  description = "Apis to get User details"
+  description = "API to get user details"
 }
 
 # Authorizer
-resource "aws_api_gateway_authorizer" "user_management_api" {
-  name = "user_management_api_authorizer"
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
+resource "aws_api_gateway_authorizer" "get_user_details" {
+  name = "get_user_details_authorizer"
+  rest_api_id = aws_api_gateway_rest_api.get_user_details.id
   type = "COGNITO_USER_POOLS"
   provider_arns = ["${var.user_pool_arn}"]
 }
 
-
-# root resource survey_metrics
-resource "aws_api_gateway_resource" "user_details_root_resource" {
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
-  parent_id = aws_api_gateway_rest_api.user_management_api.root_resource_id
-  path_part = "users"
+# root resource user_details_by_id
+resource "aws_api_gateway_resource" "user_details_by_id" {
+  rest_api_id = aws_api_gateway_rest_api.get_user_details.id
+  parent_id = aws_api_gateway_rest_api.get_user_details.root_resource_id
+  path_part = "user_details_by_id"
 }
-
-
-# root resource survey_metrics
-resource "aws_api_gateway_resource" "user_details_by_user_id" {
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
-  parent_id = aws_api_gateway_rest_api.user_details_root_resource.id
-  path_part = "user_details_by_user_id"
-}
-
 
 # child resource : get_user_details_by_user_id
 resource "aws_api_gateway_resource" "get_user_details_by_user_id" {
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
-  parent_id = aws_api_gateway_resource.user_details_by_user_id.id
+  rest_api_id = aws_api_gateway_rest_api.get_user_details.id
+  parent_id = aws_api_gateway_resource.user_details_by_id.id
   path_part = "{user_id}"
 }
 
 
 # get_user_details_by_user_id : method
-resource "aws_api_gateway_method" "GET_user_details" {
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
+resource "aws_api_gateway_method" "POST" {
+  rest_api_id = aws_api_gateway_rest_api.get_user_details.id
   resource_id = aws_api_gateway_resource.get_user_details_by_user_id.id
   http_method = "GET"
   authorization = "COGNITO_USER_POOLS"
-  authorizer_id = aws_api_gateway_authorizer.user_management_api.id
+  authorizer_id = aws_api_gateway_authorizer.get_user_details.id
 }
 
 #  lambda integration : get_user_details_by_user_id-post-lambda
 resource "aws_api_gateway_integration" "get_user_details_by_user_id-post-lambda" {
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
-  resource_id = aws_api_gateway_method.GET_user_details.resource_id
-  http_method = aws_api_gateway_method.GET_user_details.http_method
+  rest_api_id = aws_api_gateway_rest_api.get_user_details.id
+  resource_id = aws_api_gateway_method.POST.resource_id
+  http_method = aws_api_gateway_method.POST.http_method
   integration_http_method = "POST"
   type = "AWS_PROXY"
   uri = aws_lambda_function.get_user_details_by_user_id.invoke_arn
@@ -153,13 +142,14 @@ resource "aws_api_gateway_integration" "get_user_details_by_user_id-post-lambda"
 module "cors_get_user_details_by_user_id" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
-  api_id          = aws_api_gateway_rest_api.user_management_api.id
+  api_id          = aws_api_gateway_rest_api.get_user_details.id
   api_resource_id = aws_api_gateway_resource.get_user_details_by_user_id.id
 }
 
-resource "aws_api_gateway_deployment" "user_management_api_deployment" {
+
+resource "aws_api_gateway_deployment" "get_user_details_deployment" {
   depends_on= [aws_api_gateway_integration.get_user_details_by_user_id-post-lambda]
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
+  rest_api_id = aws_api_gateway_rest_api.get_user_details.id
   stage_name  = "${var.env}"
 }
 
