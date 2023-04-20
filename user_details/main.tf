@@ -114,12 +114,14 @@ resource "aws_api_gateway_resource" "user_details" {
   path_part = "users"
 }
 
+
 # root resource survey_metrics
 resource "aws_api_gateway_resource" "user_details_by_user_id" {
   rest_api_id = aws_api_gateway_rest_api.user_management_api.id
   parent_id = aws_api_gateway_rest_api.user_details.id
   path_part = "user_details_by_user_id"
 }
+
 
 # child resource : get_user_details_by_user_id
 resource "aws_api_gateway_resource" "get_user_details_by_user_id" {
