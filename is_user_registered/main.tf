@@ -134,7 +134,6 @@ resource "aws_api_gateway_integration" "is_user_registered-post-lambda" {
   rest_api_id = aws_api_gateway_rest_api.user_registration.id
   resource_id = aws_api_gateway_method.POST_is_user_registered.resource_id
   http_method = aws_api_gateway_method.POST_is_user_registered.http_method
-  
   integration_http_method = "POST"
   type = "AWS_PROXY"
   uri = aws_lambda_function.is_user_registered.invoke_arn
