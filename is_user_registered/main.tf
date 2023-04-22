@@ -61,12 +61,12 @@ resource "aws_iam_role_policy_attachment" "test_attach_is_user_registered" {
 resource "aws_lambda_function" "is_user_registered" {
 
 
-  filename      = "../../get_user_registration/is_user_registered.zip"
+  filename      = "../../is_user_registered/is_user_registered.zip"
   function_name = "is_user_registered"
   role          = aws_iam_role.iam_is_user_registered.arn
   handler       = "lambda_function.lambda_handler"
 
-  source_code_hash = filebase64sha256("../../get_user_registration/is_user_registered.zip")
+  source_code_hash = filebase64sha256("../../is_user_registered/is_user_registered.zip")
 
   runtime = "python3.8"
 
