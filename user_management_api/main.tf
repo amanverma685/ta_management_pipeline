@@ -34,6 +34,11 @@ resource "aws_iam_policy" "update_user_details_policy" {
     },
     {
             "Effect": "Allow",
+            "Action": ["cognito-idp:AdminUpdateUserAttributes","cognito-idp:AdminAddUserToGroup"],
+            "Resource": "*"
+    },
+    {
+            "Effect": "Allow",
             "Action": [
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
