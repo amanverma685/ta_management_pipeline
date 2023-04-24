@@ -78,7 +78,8 @@ resource "aws_lambda_function" "is_user_registered" {
       database = "${var.database}",
       user = "${var.user}",
       password="${var.password}",
-      port= "${var.port}"
+      port= "${var.port}",
+      user_pool_id ="${var.user_pool_id}"
     }
   }
 }
