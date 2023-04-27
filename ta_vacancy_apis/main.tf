@@ -32,6 +32,11 @@ resource "aws_iam_policy" "add_ta_vacancy_policy" {
             "Action": "logs:CreateLogGroup",
             "Resource": "*"
     },
+     {
+      "Effect": "Allow",
+      "Action": ["codewhisperer:GenerateRecommendations"],
+      "Resource": "*"
+    },
     {
             "Effect": "Allow",
             "Action": [
