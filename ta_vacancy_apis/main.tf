@@ -280,8 +280,17 @@ module "cors_add_ta_vacancy" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
   api_id          = aws_api_gateway_rest_api.ta_vacancy_form.id
+  api_resource_id = aws_api_gateway_resource.get_ta_vacancy_list.id
+}
+
+
+module "cors_add_ta_vacancy" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+  api_id          = aws_api_gateway_rest_api.ta_vacancy_form.id
   api_resource_id = aws_api_gateway_resource.add_ta_vacancy.id
 }
+
 
 resource "aws_api_gateway_deployment" "ta_vacancy_form_deployment" {
   depends_on= [aws_api_gateway_integration.add_ta_vacancy-post-lambda]
