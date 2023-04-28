@@ -284,7 +284,7 @@ module "cors_add_ta_vacancy" {
 }
 
 
-module "cors_add_ta_vacancy" {
+module "cors_list_ta_vacancy" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
   api_id          = aws_api_gateway_rest_api.ta_vacancy_form.id
