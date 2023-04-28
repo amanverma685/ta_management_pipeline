@@ -98,7 +98,7 @@ resource "aws_lambda_permission" "aws_lambda_add_ta_vacancy_permission" {
 
 # API Name
 resource "aws_api_gateway_rest_api" "ta_vacancy_form" {
-  name = "Ta Vacancy Management"
+  name = "TA Vacancy Management"
   description = "Apis to post ta form details"
 }
 
