@@ -255,19 +255,6 @@ resource "aws_lambda_permission" "aws_lambda_get_user_details_permission" {
   source_arn = "${aws_api_gateway_rest_api.user_management_api.execution_arn}/*/*"
 }
 
-# API Name
-resource "aws_api_gateway_rest_api" "user_management_api" {
-  name = "user Management"
-  description = "Apis to get user details"
-}
-
-# Authorizer
-resource "aws_api_gateway_authorizer" "user_management_api" {
-  name = "user_management_api_authorizer"
-  rest_api_id = aws_api_gateway_rest_api.user_management_api.id
-  type = "COGNITO_USER_POOLS"
-  provider_arns = ["${var.user_pool_arn}"]
-}
 
 
 # child resource : get_user_details
