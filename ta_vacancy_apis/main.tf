@@ -292,10 +292,154 @@ module "cors_list_ta_vacancy" {
 }
 
 
+# ------------------------------ Get TA Vacancy List  By User Id-------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+
+resource "aws_iam_role" "iam_get_ta_vacancy_list_by_user_id" {
+  name = "iam_get_ta_vacancy_list_by_user_id_${var.env}"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+
+resource "aws_iam_policy" "get_ta_vacancy_list_by_user_id_policy" {
+  name        = "get_ta_vacancy_list_by_user_id_policy-${var.env}"
+  description = "A ses policy"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+            "Effect": "Allow",
+            "Action": "logs:CreateLogGroup",
+            "Resource": "*"
+    },
+     {
+      "Effect": "Allow",
+      "Action": ["codewhisperer:GenerateRecommendations"],
+      "Resource": "*"
+    },
+    {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+    },
+    {
+      "Action": [
+        "ec2:Describe*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "test_attach_get_ta_vacancy_list_by_user_id" {
+  role       = aws_iam_role.iam_get_ta_vacancy_list_by_user_id.name
+  policy_arn = aws_iam_policy.get_ta_vacancy_list_by_user_id_policy.arn
+}
+
+
+resource "aws_lambda_function" "get_ta_vacancy_list_by_user_id" {
+
+
+  filename      = "../../ta_vacancy_apis/get_ta_vacancy_list_by_user_id.zip"
+  function_name = "get_ta_vacancy_list_by_user_id"
+  role          = aws_iam_role.iam_get_ta_vacancy_list_by_user_id.arn
+  handler       = "lambda_function.lambda_handler"
+
+  source_code_hash = filebase64sha256("../../ta_vacancy_apis/get_ta_vacancy_list_by_user_id.zip")
+
+  runtime = "python3.8"
+
+  layers = ["${var.psycopg2_arn}"]
+
+  environment {
+    variables = {
+      host = "${var.host}",
+      database = "${var.database}",
+      user = "${var.user}",
+      password="${var.password}",
+      port= "${var.port}"
+    }
+  }
+}
+
+resource "aws_lambda_permission" "aws_lambda_get_ta_vacancy_list_by_user_id_permission" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.get_ta_vacancy_list_by_user_id.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_api_gateway_rest_api.ta_vacancy_form.execution_arn}/*/*"
+}
+
+
+
+# child resource : get_ta_vacancy_list_by_user_id
+resource "aws_api_gateway_resource" "get_ta_vacancy_list_by_user_id" {
+  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
+  parent_id = aws_api_gateway_resource.ta_vacancy_form.id
+  path_part = "{user_id}"
+}
+
+
+# get_ta_vacancy_list_by_user_id : method
+resource "aws_api_gateway_method" "get_ta_vacancy_list_by_user_id" {
+  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
+  resource_id = aws_api_gateway_resource.get_ta_vacancy_list_by_user_id.id
+  http_method = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.ta_vacancy_form.id
+}
+
+#  lambda integration : get_ta_vacancy_list_by_user_id-post-lambda
+resource "aws_api_gateway_integration" "get_ta_vacancy_list_by_user_id-post-lambda" {
+  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
+  resource_id = aws_api_gateway_method.get_ta_vacancy_list_by_user_id.resource_id
+  http_method = aws_api_gateway_method.get_ta_vacancy_list_by_user_id.http_method
+  integration_http_method = "POST"
+  type = "AWS_PROXY"
+  uri = aws_lambda_function.get_ta_vacancy_list_by_user_id.invoke_arn
+}
+
+
+
+module "cors_list_ta_vacancy_user_id" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+  api_id          = aws_api_gateway_rest_api.ta_vacancy_form.id
+  api_resource_id = aws_api_gateway_resource.get_ta_vacancy_list_by_user_id.id
+}
+
+
+
+
 resource "aws_api_gateway_deployment" "ta_vacancy_form_deployment" {
-  depends_on= [aws_api_gateway_integration.add_ta_vacancy-post-lambda]
+  depends_on= [aws_api_gateway_integration.add_ta_vacancy-post-lambda,get_ta_vacancy_list-post-lambda,get_ta_vacancy_list_by_user_id-post-lambda]
   rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
   stage_name  = "${var.env}"
 }
+
+
 
 
