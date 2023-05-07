@@ -435,7 +435,7 @@ module "cors_list_ta_vacancy_user_id" {
 
 
 resource "aws_api_gateway_deployment" "ta_vacancy_form_deployment" {
-  depends_on= [aws_api_gateway_integration.add_ta_vacancy-post-lambda,get_ta_vacancy_list-post-lambda,get_ta_vacancy_list_by_user_id-post-lambda]
+  depends_on= [aws_api_gateway_integration.add_ta_vacancy-post-lambda,aws_api_gateway_integration.get_ta_vacancy_list-post-lambda,aws_api_gateway_integration.get_ta_vacancy_list_by_user_id-post-lambda]
   rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
   stage_name  = "${var.env}"
 }
