@@ -399,7 +399,7 @@ resource "aws_lambda_permission" "aws_lambda_get_ta_vacancy_list_by_user_id_perm
 resource "aws_api_gateway_resource" "get_ta_vacancy_list_by_user_id" {
   rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
   parent_id = aws_api_gateway_resource.ta_vacancy_form.id
-  path_part = "{user_id}"
+  path_part = "get_ta_vacancy_list_by_user_id"
 }
 
 
