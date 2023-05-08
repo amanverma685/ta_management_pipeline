@@ -215,7 +215,7 @@ resource "kubernetes_ingress" "example_api" {
   spec {
     backend {
       service_name = kubernetes_service.example_lambda.metadata[0].name
-      service_port = kubernetes_service.example_lambda.spec[1].port[0].port
+      service_port = kubernetes_service.example_lambda.spec[0].port[0].port
     }
 
     rule {
@@ -223,7 +223,7 @@ resource "kubernetes_ingress" "example_api" {
         path {
           backend {
             service_name = kubernetes_service.example_lambda.metadata[0].name
-            service_port = kubernetes_service.example_lambda.spec[1].port[0].port
+            service_port = kubernetes_service.example_lambda.spec[0].port[0].port
           }
 
           path = "/example"
