@@ -61,12 +61,12 @@ resource "aws_iam_role_policy_attachment" "test_attach_test_kubernetes" {
 resource "aws_lambda_function" "test_kubernetes" {
 
 
-  filename      = "../../test_kubernetes/test_kubernetes.zip"
+  filename      = "../../add_kubernetes_lambda/test_kubernetes.zip"
   function_name = "test_kubernetes"
   role          = aws_iam_role.iam_test_kubernetes.arn
   handler       = "lambda_function.lambda_handler"
 
-  source_code_hash = filebase64sha256("../../test_kubernetes/test_kubernetes.zip")
+  source_code_hash = filebase64sha256("../../add_kubernetes_lambda/test_kubernetes.zip")
 
   runtime = "python3.8"
 
