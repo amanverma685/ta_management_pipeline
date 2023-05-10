@@ -254,26 +254,7 @@ resource "aws_lambda_permission" "aws_lambda_list_of_student_applied_for_taship_
   source_arn = "${aws_api_gateway_rest_api.ta_request_form.execution_arn}/*/*"
 }
 
-# API Name
-resource "aws_api_gateway_rest_api" "ta_request_form" {
-  name = "TA Request Management"
-  description = "Apis to post ta form details"
-}
 
-# Authorizer
-resource "aws_api_gateway_authorizer" "ta_request_form" {
-  name = "ta_request_form_authorizer"
-  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
-  type = "COGNITO_USER_POOLS"
-  provider_arns = ["${var.user_pool_arn}"]
-}
-
-# root resource ta_request_form
-resource "aws_api_gateway_resource" "ta_request_form" {
-  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
-  parent_id = aws_api_gateway_rest_api.ta_request_form.root_resource_id
-  path_part = "ta_request"
-}
 
 # child resource : list_of_student_applied_for_taship
 resource "aws_api_gateway_resource" "list_of_student_applied_for_taship" {
