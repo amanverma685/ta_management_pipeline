@@ -149,7 +149,7 @@ module "cors_student_request_for_taship" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
   api_id          = aws_api_gateway_rest_api.ta_request_form.id
-  api_resource_id = aws_api_gateway_resource.get_ta_request_list.id
+  api_resource_id = aws_api_gateway_resource.student_request_for_taship.id
 }
 
 resource "aws_api_gateway_deployment" "ta_request_form_deployment" {
