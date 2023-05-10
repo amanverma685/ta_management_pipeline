@@ -1,5 +1,5 @@
-resource "aws_iam_role" "iam_add_ta_vacancy" {
-  name = "iam_add_ta_vacancy_${var.env}"
+resource "aws_iam_role" "iam_student_request_for_taship" {
+  name = "iam_student_request_for_taship_${var.env}"
 
   assume_role_policy = <<EOF
 {
@@ -19,8 +19,8 @@ EOF
 }
 
 
-resource "aws_iam_policy" "add_ta_vacancy_policy" {
-  name        = "add_ta_vacancy_policy-${var.env}"
+resource "aws_iam_policy" "student_request_for_taship_policy" {
+  name        = "student_request_for_taship_policy-${var.env}"
   description = "A ses policy"
 
   policy = <<EOF
@@ -57,21 +57,21 @@ resource "aws_iam_policy" "add_ta_vacancy_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "test_attach_add_ta_vacancy" {
-  role       = aws_iam_role.iam_add_ta_vacancy.name
-  policy_arn = aws_iam_policy.add_ta_vacancy_policy.arn
+resource "aws_iam_role_policy_attachment" "test_attach_student_request_for_taship" {
+  role       = aws_iam_role.iam_student_request_for_taship.name
+  policy_arn = aws_iam_policy.student_request_for_taship_policy.arn
 }
 
 
-resource "aws_lambda_function" "add_ta_vacancy" {
+resource "aws_lambda_function" "student_request_for_taship" {
 
 
-  filename      = "../../ta_vacancy_apis/add_ta_vacancy.zip"
-  function_name = "add_ta_vacancy"
-  role          = aws_iam_role.iam_add_ta_vacancy.arn
+  filename      = "../../student_request_for_taship/student_request_for_taship.zip"
+  function_name = "student_request_for_taship"
+  role          = aws_iam_role.iam_student_request_for_taship.arn
   handler       = "lambda_function.lambda_handler"
 
-  source_code_hash = filebase64sha256("../../ta_vacancy_apis/add_ta_vacancy.zip")
+  source_code_hash = filebase64sha256("../../student_request_for_taship/student_request_for_taship.zip")
 
   runtime = "python3.8"
 
@@ -88,73 +88,73 @@ resource "aws_lambda_function" "add_ta_vacancy" {
   }
 }
 
-resource "aws_lambda_permission" "aws_lambda_add_ta_vacancy_permission" {
+resource "aws_lambda_permission" "aws_lambda_student_request_for_taship_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.add_ta_vacancy.function_name
+  function_name = aws_lambda_function.student_request_for_taship.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn = "${aws_api_gateway_rest_api.ta_vacancy_form.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_rest_api.ta_request_form.execution_arn}/*/*"
 }
 
 # API Name
-resource "aws_api_gateway_rest_api" "ta_vacancy_form" {
-  name = "TA Vacancy Management"
+resource "aws_api_gateway_rest_api" "ta_request_form" {
+  name = "TA Request Management"
   description = "Apis to post ta form details"
 }
 
 # Authorizer
-resource "aws_api_gateway_authorizer" "ta_vacancy_form" {
-  name = "ta_vacancy_form_authorizer"
-  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
+resource "aws_api_gateway_authorizer" "ta_request_form" {
+  name = "ta_request_form_authorizer"
+  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
   type = "COGNITO_USER_POOLS"
   provider_arns = ["${var.user_pool_arn}"]
 }
 
-# root resource ta_vacancy_form
-resource "aws_api_gateway_resource" "ta_vacancy_form" {
-  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
-  parent_id = aws_api_gateway_rest_api.ta_vacancy_form.root_resource_id
-  path_part = "ta_vacancy"
+# root resource ta_request_form
+resource "aws_api_gateway_resource" "ta_request_form" {
+  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
+  parent_id = aws_api_gateway_rest_api.ta_request_form.root_resource_id
+  path_part = "ta_request"
 }
 
-# child resource : add_ta_vacancy
-resource "aws_api_gateway_resource" "add_ta_vacancy" {
-  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
-  parent_id = aws_api_gateway_resource.ta_vacancy_form.id
-  path_part = "post_form_details"
+# child resource : student_request_for_taship
+resource "aws_api_gateway_resource" "student_request_for_taship" {
+  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
+  parent_id = aws_api_gateway_resource.ta_request_form.id
+  path_part = "post_ta_request_details"
 }
 
 
-# add_ta_vacancy : method
-resource "aws_api_gateway_method" "add_ta_vacancy" {
-  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
-  resource_id = aws_api_gateway_resource.add_ta_vacancy.id
+# student_request_for_taship : method
+resource "aws_api_gateway_method" "student_request_for_taship" {
+  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
+  resource_id = aws_api_gateway_resource.student_request_for_taship.id
   http_method = "POST"
   authorization = "COGNITO_USER_POOLS"
-  authorizer_id = aws_api_gateway_authorizer.ta_vacancy_form.id
+  authorizer_id = aws_api_gateway_authorizer.ta_request_form.id
 }
 
-#  lambda integration : add_ta_vacancy-post-lambda
-resource "aws_api_gateway_integration" "add_ta_vacancy-post-lambda" {
-  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
-  resource_id = aws_api_gateway_method.add_ta_vacancy.resource_id
-  http_method = aws_api_gateway_method.add_ta_vacancy.http_method
+#  lambda integration : student_request_for_taship-post-lambda
+resource "aws_api_gateway_integration" "student_request_for_taship-post-lambda" {
+  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
+  resource_id = aws_api_gateway_method.student_request_for_taship.resource_id
+  http_method = aws_api_gateway_method.student_request_for_taship.http_method
   integration_http_method = "POST"
   type = "AWS_PROXY"
-  uri = aws_lambda_function.add_ta_vacancy.invoke_arn
+  uri = aws_lambda_function.student_request_for_taship.invoke_arn
 }
 
 
-module "cors_add_ta_vacancy" {
+module "cors_student_request_for_taship" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
-  api_id          = aws_api_gateway_rest_api.ta_vacancy_form.id
-  api_resource_id = aws_api_gateway_resource.get_ta_vacancy_list.id
+  api_id          = aws_api_gateway_rest_api.ta_request_form.id
+  api_resource_id = aws_api_gateway_resource.get_ta_request_list.id
 }
 
-resource "aws_api_gateway_deployment" "ta_vacancy_form_deployment" {
-  depends_on= [aws_api_gateway_integration.add_ta_vacancy-post-lambda,aws_api_gateway_integration.get_ta_vacancy_list-post-lambda,aws_api_gateway_integration.get_ta_vacancy_list_by_user_id-post-lambda]
-  rest_api_id = aws_api_gateway_rest_api.ta_vacancy_form.id
+resource "aws_api_gateway_deployment" "ta_request_form_deployment" {
+  depends_on= [aws_api_gateway_integration.student_request_for_taship-post-lambda]
+  rest_api_id = aws_api_gateway_rest_api.ta_request_form.id
   stage_name  = "${var.env}"
 }
 
