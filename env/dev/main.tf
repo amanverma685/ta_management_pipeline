@@ -93,6 +93,20 @@ module "student_request_for_taship" {
   user_pool_id          = "ap-south-1_cKnp6b0v0"
 }
 
+# module "student_response_for_taship" {
+#   source                = "../../student_response_for_taship/"
+#   env                   = "dev"
+#   host                  = "spe-major-project.cqfn3y5ohgqj.ap-south-1.rds.amazonaws.com"
+#   database              = "spe_major"
+#   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
+#   user                  = "postgres"
+#   password              = "admin123"
+#   port                  = "5432"
+#   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
+#   user_pool_id          = "ap-south-1_cKnp6b0v0"
+# }
+
+
 # module "add_kubernetes_lambda" {
 #   source                = "../../add_kubernetes_lambda/"
 #   env                   = "dev"
