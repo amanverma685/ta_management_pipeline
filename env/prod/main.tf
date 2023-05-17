@@ -24,7 +24,7 @@ provider "aws" {
 
 module "authorisation_api" {
   source                = "../../authorisation_apis/"
-  env                   = "dev"
+  env                   = "prod"
   host                  = "spe-major-project.cqfn3y5ohgqj.ap-south-1.rds.amazonaws.com"
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
@@ -41,7 +41,7 @@ module "authorisation_api" {
 
 module "is_user_registered" {
   source                = "../../is_user_registered/"
-  env                   = "dev"
+  env                   = "prod"
   host                  = "spe-major-project.cqfn3y5ohgqj.ap-south-1.rds.amazonaws.com"
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
