@@ -4,7 +4,7 @@ terraform {
     key = "prod"
     access_key = "AKIA4EXG3DQ2JCNNGCCF"
     secret_key = "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"
-    region = "us-east-1"
+    region = "ap-south-1"
   }
   required_providers {
     aws = {
