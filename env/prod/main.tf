@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "terraform-deployement-state"
+    bucket = "ta-management-deployment"
     key = "prod"
     access_key = "AKIA4EXG3DQ2JCNNGCCF"
     secret_key = "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"
