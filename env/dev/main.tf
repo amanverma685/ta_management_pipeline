@@ -3,8 +3,8 @@ terraform {
   backend "s3" {
     bucket     = "ta-management-deployment"
     key        = "dev"
-    access_key = "AKIA4EXG3DQ2JCNNGCCF"
-    secret_key = "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"
+    access_key = ""
+    secret_key = ""
     region     = "ap-south-1"
   }
 
@@ -20,8 +20,8 @@ terraform {
 
 provider "aws" {
   region     = "ap-south-1"
-  access_key = "AKIA4EXG3DQ2JCNNGCCF"
-  secret_key = "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"
+  access_key = ""
+  secret_key = ""
 }
 
 
@@ -32,7 +32,7 @@ module "authorisation_api" {
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
-  password              = "admin123"
+  password              = "********"
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   client_id             = "41ktatknk96rrk9kjgpe6ighdc"
@@ -48,7 +48,7 @@ module "is_user_registered" {
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
-  password              = "admin123"
+  password              = "********"
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
@@ -61,7 +61,7 @@ module "user_management_api" {
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
-  password              = "admin123"
+  password              = "****"
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
@@ -74,7 +74,7 @@ module "ta_vacancy_apis" {
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
-  password              = "admin123"
+  password              = "********"
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
@@ -87,7 +87,7 @@ module "student_request_for_taship" {
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
-  password              = "admin123"
+  password              = "********"
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
@@ -100,7 +100,7 @@ module "request_accepted_rejected_by_professor" {
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
-  password              = "admin123"
+  password              = "********"
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
@@ -115,7 +115,7 @@ module "ta_management_metrics" {
   database              = "spe_major"
   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
   user                  = "postgres"
-  password              = "admin123"
+  password              = "********"
   port                  = "5432"
   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
   user_pool_id          = "ap-south-1_cKnp6b0v0"
@@ -128,7 +128,7 @@ module "ta_management_metrics" {
 #   database              = "spe_major"
 #   psycopg2_arn          = "arn:aws:lambda:ap-south-1:834781518900:layer:psycopg2_layer_for_python_3_8:1"
 #   user                  = "postgres"
-#   password              = "admin123"
+#   password              = "********"
 #   port                  = "5432"
 #   user_pool_arn         = "arn:aws:cognito-idp:ap-south-1:834781518900:userpool/ap-south-1_cKnp6b0v0"
 #   user_pool_id          = "ap-south-1_cKnp6b0v0"
